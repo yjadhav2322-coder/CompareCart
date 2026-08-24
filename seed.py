@@ -65,7 +65,7 @@ with app.app_context():
     derma_co = Product(
         name="The Derma Co 2% Salicylic Acid Face Wash",
         category="Skincare",
-        image="/static/images/dermaco.jpg",
+        image="/static/images/dermaCo.jpg",
         description="Salicylic acid face wash designed for cleansing and removing excess oil."
     )
 

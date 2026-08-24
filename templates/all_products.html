@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ page_title|default('All Products') }} - CompareCart
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <div class="logo-icon">🛒</div>
+
+        <span>
+            Compare<span class="logo-highlight">Cart</span>
+        </span>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/products" class="active">
+            Products
+        </a>
+
+        <a href="/#about">
+            About
+        </a>
+
+    </div>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div class="nav-actions">
+
+        <a href="#" class="nav-action">
+
+            <span class="nav-action-icon">
+                ♡
+            </span>
+
+            <span>
+                Wishlist
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('cart') }}" class="nav-action">
+
+            <span class="nav-action-icon">
+                🛒
+            </span>
+
+            <span>
+               Cart
+            </span>
+
+            <span class="cart-count">
+                0
+            </span>
+
+        </a>
+
+
+        <a href="#" class="account-button">
+
+            <span class="account-icon">
+                👤
+            </span>
+
+            <span>
+                Account
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= PAGE HEADER ================= -->
+
+<section class="all-products-header">
+
+    <span class="small-title">
+        EXPLORE PRODUCTS
+    </span>
+
+
+    <h1>
+        {{ page_title|default('All Products') }}
+    </h1>
+
+
+    <p>
+
+        {% if page_title|default('All Products') == 'All Products' %}
+
+            Browse all products and compare prices
+            from different stores.
+
+        {% else %}
+
+            Browse {{ page_title }} and compare prices
+            from different stores.
+
+        {% endif %}
+
+    </p>
+
+</section>
+
+
+
+<!-- ================= PRODUCTS ================= -->
+
+<section class="all-products-section">
+
+
+    <div class="product-grid">
+
+
+        {% for product in products %}
+
+
+        <!-- PRODUCT CARD -->
+
+        <div class="product-card">
+
+
+            <!-- PRODUCT IMAGE -->
+
+            <div class="product-image">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    📦
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="product-info">
+
+
+                <!-- CATEGORY -->
+
+                <span class="product-category">
+
+                    {{ product.category }}
+
+                </span>
+
+
+
+                <!-- PRODUCT NAME -->
+
+                <h3>
+
+                    {{ product.name }}
+
+                </h3>
+
+
+
+                <!-- DESCRIPTION -->
+
+                <p class="description">
+
+                    {{ product.description }}
+
+                </p>
+
+
+
+                <!-- PRICE -->
+
+                {% if product.prices %}
+
+                <div class="price-row">
+
+
+                    <div>
+
+                        <span class="from">
+
+                            Starting from
+
+                        </span>
+
+
+                        <strong>
+
+                            ₹{{ "{:,.0f}".format(
+
+                                product.prices
+                                | map(attribute='price')
+                                | select
+                                | list
+                                | min
+
+                            ) }}
+
+                        </strong>
+
+
+                        <small class="best-store">
+
+                            Best price at
+
+                            {{
+
+                                (
+                                    product.prices
+                                    | sort(attribute='price')
+                                    | first
+                                ).seller.name
+
+                            }}
+
+                        </small>
+
+                    </div>
+
+
+                    <span class="best-tag">
+
+                        BEST PRICE
+
+                    </span>
+
+
+                </div>
+
+                {% endif %}
+
+
+
+                <!-- WISHLIST + VIEW PRODUCT -->
+
+            <div class="product-actions">
+
+                <!-- WISHLIST -->
+
+                <form
+                    action="{{ url_for('add_to_wishlist', product_id=product.id) }}"
+                    method="POST"
+                >
+
+                    <button
+                        type="submit"
+                        class="wishlist-btn"
+                    >
+                        ♡ Wishlist
+                    </button>
+
+                </form>
+
+
+                 <!-- CART -->
+
+                <form
+                    action="{{ url_for('add_to_cart', product_id=product.id) }}"
+                    method="POST"
+                >
+
+                    <button
+                        type="submit"
+                        class="cart-btn"
+                    >
+                        🛒 Add to Cart
+                    </button>
+
+                </form>
+
+
+                <!-- VIEW PRODUCT -->
+
+                <a
+                    href="{{ url_for('product', product_id=product.id) }}"
+                    class="compare-btn"
+                >
+                    View Product →
+                </a>
+
+            </div>
+
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- NO PRODUCTS -->
+
+        <div class="no-products">
+
+            <h2>
+                No products found
+            </h2>
+
+            <p>
+                There are currently no products
+                available in this category.
+            </p>
+
+            <a href="/" class="compare-btn">
+                Back to Home
+            </a>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-logo">
+
+        🛒 CompareCart
+
+    </div>
+
+
+    <p>
+
+        Compare. Choose. Save.
+
+    </p>
+
+
+    <div class="footer-line">
+    </div>
+
+
+    <small>
+
+        © 2026 CompareCart | College Mini Project
+
+    </small>
+
+</footer>
+
+
+<script
+    src="{{ url_for('static', filename='js/script.js') }}">
+</script>
+
+
+</body>
+
+</html>

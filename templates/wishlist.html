@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Wishlist - CompareCart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        Compare<span class="logo-highlight">Cart</span>
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('all_products') }}">
+            Products
+        </a>
+
+    </div>
+
+
+    <div class="nav-actions">
+
+        <a href="{{ url_for('account') }}"
+           class="account-button">
+
+            👤
+
+            <span>
+                {{ session.get("user_name") }}
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="wishlist-page">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            SAVED PRODUCTS
+        </span>
+
+        <h2>
+            ❤️ My Wishlist
+        </h2>
+
+        <p>
+            Products you want to keep an eye on.
+        </p>
+
+    </div>
+
+
+    {% if wishlist_items %}
+
+        <div class="wishlist-grid">
+
+            {% for item in wishlist_items %}
+
+                <div class="wishlist-card">
+
+
+                    <div class="wishlist-image">
+
+                        <img
+                            src="{{ item.product.image }}"
+                            alt="{{ item.product.name }}"
+                        >
+
+                    </div>
+
+
+                    <div class="wishlist-info">
+
+                        <span class="product-category">
+                            {{ item.product.category }}
+                        </span>
+
+                        <h3>
+                            {{ item.product.name }}
+                        </h3>
+
+                        <p>
+                            {{ item.product.description }}
+                        </p>
+
+
+                        <div class="wishlist-buttons">
+
+                            <a
+                                href="{{ url_for('product', product_id=item.product.id) }}"
+                                class="compare-btn">
+
+                                View Product
+
+                            </a>
+
+
+                            <form
+                                action="{{ url_for('remove_from_wishlist', item_id=item.id) }}"
+                                method="POST">
+
+                                <button
+                                    type="submit"
+                                    class="remove-wishlist">
+
+                                    Remove ❤️
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-wishlist">
+
+            <div>
+                ❤️
+            </div>
+
+            <h3>
+                Your wishlist is empty
+            </h3>
+
+            <p>
+                Save products here so you can compare them later.
+            </p>
+
+            <a
+                href="{{ url_for('all_products') }}"
+                class="compare-btn">
+
+                Explore Products
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+</body>
+
+</html>

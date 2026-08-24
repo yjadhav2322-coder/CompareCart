@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Order Successful - CompareCart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        Compare<span class="logo-highlight">Cart</span>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('all_products') }}">
+            Products
+        </a>
+
+    </div>
+
+
+    <div class="nav-actions">
+
+        <a href="{{ url_for('account') }}"
+           class="account-button">
+
+            👤
+
+            <span>
+                {{ session.get("user_name") }}
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="order-success-page">
+
+    <div class="order-success-card">
+
+        <div class="success-icon">
+
+            ✓
+
+        </div>
+
+
+        <span class="small-title">
+
+            ORDER CONFIRMED
+
+        </span>
+
+
+        <h1>
+
+            Order Placed Successfully! 🎉
+
+        </h1>
+
+
+        <p>
+
+            Thank you for using CompareCart.
+
+        </p>
+
+
+        <div class="order-details">
+
+            <div>
+
+                <span>
+                    Items Ordered
+                </span>
+
+                <strong>
+                    {{ item_count }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Total Amount
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(total) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('all_products') }}"
+            class="checkout-btn"
+        >
+
+            Continue Shopping →
+
+        </a>
+
+
+        <a
+            href="{{ url_for('home') }}"
+            class="back-cart"
+        >
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+</section>
+
+
+</body>
+
+</html>

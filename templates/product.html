@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ product.name }} - CompareCart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 <span>CompareCart</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/#products">Products</a>
+
+        <a href="/#about">About</a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- PRODUCT DETAILS -->
+
+<section class="product-details">
+
+    <div class="product-image">
+
+        <img src="{{ product.image }}"
+             alt="{{ product.name }}">
+
+    </div>
+
+
+    <div class="product-info">
+
+        <span class="small-title">
+            PRODUCT DETAILS
+        </span>
+
+        <h1>
+            {{ product.name }}
+        </h1>
+
+        <p class="product-description">
+            {{ product.description }}
+        </p>
+
+
+        <div class="product-rating">
+            ⭐ 4.5
+        </div>
+
+
+        <div class="product-best-price">
+
+            <span>
+                BEST AVAILABLE PRICE
+            </span>
+
+            <strong>
+                ₹{{ "{:,}".format(best_price) }}
+            </strong>
+
+            <small>
+                🏆 Lowest price found
+            </small>
+
+        </div>
+
+
+        
+
+    </div>
+
+</section>
+
+
+
+<!-- PRICE COMPARISON -->
+
+<section class="seller-section">
+
+    <span class="small-title">
+        PRICE COMPARISON
+    </span>
+
+    <h2>
+        Compare Sellers
+    </h2>
+
+    <p>
+        Check prices from different stores before buying.
+    </p>
+
+
+    <div class="seller-table">
+
+
+        {% for seller in sellers %}
+
+        <div class="seller-row">
+
+
+            <div class="seller-name">
+
+                🏪
+
+                <strong>
+                    {{ seller.seller.name }}
+                </strong>
+
+            </div>
+
+
+            <div class="seller-price">
+
+                ₹{{ "{:,}".format(seller.price) }}
+
+            </div>
+
+
+            <div class="seller-stock">
+
+                ● {{ seller.availability }}
+
+            </div>
+
+
+            {% if seller.price == best_price %}
+
+            <span class="seller-best">
+
+                🏆 BEST PRICE
+
+            </span>
+
+            {% endif %}
+
+
+            <a href="{{ seller.url }}"
+               target="_blank"
+               class="seller-button">
+
+                Buy from {{ seller.seller.name }} →
+
+            </a>
+
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+<!-- CUSTOMER REVIEWS -->
+<section class="reviews-section">
+
+    <div class="reviews-header">
+
+        <div>
+            <p class="section-label">CUSTOMER FEEDBACK</p>
+
+            <h2>What Customers Say</h2>
+
+            <p>
+                Reviews and feedback from customers who have used this product.
+            </p>
+        </div>
+
+        {% if product.feedbacks %}
+        <div class="review-summary">
+
+            {% set total_rating =
+                product.feedbacks | sum(attribute='rating')
+            %}
+
+            {% set average_rating =
+                total_rating / product.feedbacks | length
+            %}
+
+            <div class="average-rating">
+                {{ "%.1f"|format(average_rating) }}
+            </div>
+
+            <div class="rating-info">
+
+                <div class="stars">
+                    ⭐⭐⭐⭐⭐
+                </div>
+
+                <span>
+                    Based on {{ product.feedbacks|length }} reviews
+                </span>
+
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+
+
+    <div class="reviews-list">
+
+        {% if product.feedbacks %}
+
+            {% for feedback in product.feedbacks %}
+
+            <div class="review-card">
+
+                <div class="review-top">
+
+                    <div class="review-user">
+
+                        <div class="review-avatar">
+                            {{ feedback.name[0]|upper }}
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                {{ feedback.name }}
+                            </h4>
+
+                            <span class="verified-buyer">
+                                ✓ Verified Customer
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="review-date">
+
+                        {% if feedback.created_at %}
+                            {{ feedback.created_at.strftime('%d %b %Y') }}
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-stars">
+
+                    {% for i in range(1, 6) %}
+
+                        {% if i <= feedback.rating %}
+                            <span class="filled-star">★</span>
+                        {% else %}
+                            <span class="empty-star">★</span>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+
+                <p class="review-comment">
+                    {{ feedback.comment }}
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="no-reviews">
+
+                <div class="no-review-icon">
+                    💬
+                </div>
+
+                <h3>No reviews yet</h3>
+
+                <p>
+                    Customer feedback for this product will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+<!-- BACK BUTTON -->
+
+<section class="back-section">
+
+    <a href="/" class="compare-again">
+
+        ← Compare Another Product
+
+    </a>
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 CompareCart
+    </div>
+
+    <p>
+        Compare. Choose. Save.
+    </p>
+
+    <small>
+        © 2026 CompareCart | College Mini Project
+    </small>
+
+</footer>
+
+
+</body>
+
+</html>

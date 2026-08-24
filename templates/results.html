@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ query }} - CompareCart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 <span>CompareCart</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/#products">
+            Products
+        </a>
+
+        <a href="/#about">
+            About
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- RESULTS HEADER -->
+
+<section class="results-header">
+
+    <div>
+
+        <span class="small-title">
+            SEARCH RESULTS
+        </span>
+
+        <h1>
+            Results for "{{ query }}"
+        </h1>
+
+        <p>
+            We found the best available prices for your search.
+        </p>
+
+    </div>
+
+
+    <a href="/" class="back-button">
+        ← New Search
+    </a>
+
+</section>
+
+
+
+<!-- BEST PRICE -->
+
+<section class="best-price-section">
+
+    <div class="best-price-card">
+
+        <div class="trophy">
+            🏆
+        </div>
+
+        <div>
+
+            <span class="best-label">
+                BEST PRICE
+            </span>
+
+            {% if best_price is not none %}
+
+            <h2>
+                ₹{{ "{:,.0f}".format(best_price) }}
+            </h2>
+
+            {% else %}
+
+            <h2>
+                No price found
+            </h2>
+
+            {% endif %}
+                
+            
+
+            <p>
+                Lowest price we found
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- PRODUCT RESULTS -->
+
+<section class="results-section">
+
+    <div class="results-container">
+
+
+        {% for product in products %}
+
+        <div class="result-card">
+
+
+            <div class="result-product">
+
+                <div class="result-icon">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                </div>
+
+                <div>
+
+                    <span class="store-name">
+                        {{ product.store }}
+                    </span>
+
+                    <h2>
+                        {{ product.name }}
+                    </h2>
+
+                    <div class="rating">
+                        ⭐ {{ product.rating }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="result-details">
+
+                <div>
+
+                    <span class="detail-label">
+                        PRICE
+                    </span>
+
+                    <strong class="result-price">
+                        ₹{{ "{:,.0f}".format(product.price) }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span class="detail-label">
+                        AVAILABILITY
+                    </span>
+
+                    <span class="availability">
+                        ● {{ product.availability }}
+                    </span>
+
+                </div>
+
+
+                {% if product.price == best_price %}
+
+                <span class="winner-badge">
+                    🏆 BEST PRICE
+                </span>
+
+                {% endif %}
+
+
+                <a href="/product/{{ product.id }}"
+                   class="visit-button">
+
+                    View Product →
+
+                </a>
+                
+
+            </div>
+
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- COMPARISON SUMMARY -->
+
+<section class="comparison-summary">
+
+    <div class="summary-card">
+
+        <span class="small-title">
+            SMART COMPARISON
+        </span>
+
+        <h2>
+            Save money by comparing prices.
+        </h2>
+
+        <p>
+            CompareCart checks different sellers so you
+            can quickly identify the lowest available price.
+        </p>
+
+
+        <a href="/" class="compare-again">
+            Compare Another Product →
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 CompareCart
+    </div>
+
+    <p>
+        Compare. Choose. Save.
+    </p>
+
+    <div class="footer-line"></div>
+i Project
+    </small>
+
+</footer>
+
+
+</body>
+
+</html>

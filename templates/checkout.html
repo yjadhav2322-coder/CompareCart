@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout - CompareCart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        Compare<span class="logo-highlight">Cart</span>
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('all_products') }}">
+            Products
+        </a>
+
+    </div>
+
+
+    <div class="nav-actions">
+
+        <a href="{{ url_for('wishlist') }}"
+           class="nav-action">
+
+            <span>
+                ♡
+            </span>
+
+            <span>
+                Wishlist
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('cart') }}"
+           class="nav-action">
+
+            <span>
+                🛒
+            </span>
+
+            <span>
+                Cart
+            </span>
+
+            <span class="cart-count">
+                {{ cart_items|length }}
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('account') }}"
+           class="account-button">
+
+            👤
+
+            <span>
+                {{ session.get("user_name") }}
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- CHECKOUT PAGE -->
+
+<section class="checkout-page">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            ORDER SUMMARY
+        </span>
+
+        <h2>
+            🧾 Checkout
+        </h2>
+
+        <p>
+            Review your items and buy directly from the retailer.
+        </p>
+
+    </div>
+
+
+
+    <div class="checkout-container">
+
+
+        <!-- ORDER ITEMS -->
+
+        <div class="checkout-items">
+
+            <h3>
+                Your Items
+            </h3>
+
+
+            {% for item in cart_items %}
+
+                {% set valid_prices = item.product.prices
+                    | selectattr('price', 'ne', none)
+                    | list
+                %}
+
+                {% if valid_prices %}
+
+                    {% set best_price = valid_prices
+                        | sort(attribute='price')
+                        | first
+                    %}
+
+                    <div class="checkout-item">
+
+
+                        <!-- PRODUCT -->
+
+                        <div class="checkout-product">
+
+                            <img
+                                src="{{ item.product.image }}"
+                                alt="{{ item.product.name }}"
+                            >
+
+
+                            <div>
+
+                                <span class="product-category">
+                                    {{ item.product.category }}
+                                </span>
+
+                                <h4>
+                                    {{ item.product.name }}
+                                </h4>
+
+                                <p>
+                                    Quantity: {{ item.quantity }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PRICE + BUY -->
+
+                        <div class="checkout-price">
+
+                            ₹{{ "{:,.0f}".format(
+                                best_price.price * item.quantity
+                            ) }}
+
+
+                            <a
+                                href="{{ best_price.url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="buy-now-btn"
+                            >
+                                🛒 Buy Now
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <!-- PRICE SUMMARY -->
+
+        <div class="checkout-summary">
+
+            <h3>
+                Price Details
+            </h3>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(subtotal) }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Delivery
+                </span>
+
+                <strong>
+                    FREE
+                </strong>
+
+            </div>
+
+
+            <div class="summary-line">
+            </div>
+
+
+            <div class="summary-row total-row">
+
+                <span>
+                    Total Amount
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(subtotal) }}
+                </strong>
+
+            </div>
+
+
+            <p class="checkout-note">
+                CompareCart does not process orders.
+                Click <strong>Buy Now</strong> to purchase directly
+                from the retailer.
+            </p>
+
+
+            <a
+                href="{{ url_for('cart') }}"
+                class="back-cart"
+            >
+                ← Back to Cart
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</body>
+
+</html>
